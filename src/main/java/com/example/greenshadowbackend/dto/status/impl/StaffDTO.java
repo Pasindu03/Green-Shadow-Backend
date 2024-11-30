@@ -1,14 +1,22 @@
-package com.example.greenshadowbackend.dto.impl;
+package com.example.greenshadowbackend.dto.status.impl;
 
+import com.example.greenshadowbackend.util.role.Designation;
 import com.example.greenshadowbackend.util.role.Role;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
-public class StaffDto {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class StaffDTO {
     private String staffId;
     private String firstName;
     private String lastName;
-    private String designation;
+    private Designation designation;
     private String gender;
     private String joinedDate;
     private Date dateOfBirth;
@@ -20,4 +28,8 @@ public class StaffDto {
     private String contactNumber;
     private String email;
     private Role role;
+
+    private List<FieldStaffDTO> fieldStaffList;
+    private List<StaffVehicleDTO> staffVehicles;
+    private List<LogDTO> logs;
 }
