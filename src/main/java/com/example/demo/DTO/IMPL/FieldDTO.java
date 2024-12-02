@@ -1,0 +1,26 @@
+package com.example.demo.DTO.IMPL;
+
+import com.example.demo.DTO.FieldStatus;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.awt.*;
+import java.util.List;
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class FieldDTO implements FieldStatus {
+    @Id
+    private String fieldCode;
+    private String name;
+    private Point location;
+    private Double extentSize;
+    private String fieldImage1;
+    private String fieldImage2;
+    private List<String> equipmentsList;
+    private List<String> staffList;
+    private List<String> cropsList;
+    private List<String> logsList;
+}
