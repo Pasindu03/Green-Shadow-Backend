@@ -1,70 +1,57 @@
 package com.example.demo.Controller;
 
-import com.example.demo.DTO.IMPL.EquipmentDTO;
-import com.example.demo.Exception.DataPersistException;
+import com.example.demo.DTO.MessageResponse;
+import com.example.demo.Entity.Equipment;
 import com.example.demo.Service.EquipmentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("api/v1/equipments")
 @CrossOrigin
+@RestController
+@RequestMapping("/api/equipment")
 public class EquipmentController {
+
     @Autowired
     private EquipmentService equipmentService;
-    @PreAuthorize("hasAnyRole('MANAGER','ADMINISTRATIVE')")
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
 
-    public ResponseEntity<Void>saveEquipment(@RequestBody EquipmentDTO equipmentDTO){
-        try {
-            equipmentService.saveEquipment(equipmentDTO);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (DataPersistException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    @PreAuthorize("hasAnyRole('MANAGER','ADMINISTRATIVE')")
-    @DeleteMapping(value = "/{equipmentId}",consumes = MediaType.APPLICATION_JSON_VALUE)
-
-    public ResponseEntity<Void>deleveEquipment(@PathVariable("equipmentId")String equid){
-        try{
-            equipmentService.deleteEquipment(equid);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (DataPersistException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    @PreAuthorize("hasAnyRole('MANAGER','ADMINISTRATIVE','SCIENTIST')")
     @GetMapping
-    public List<EquipmentDTO>getAllEquipments(){
-        return equipmentService.getAllEquipments();
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMINISTRATIVE', 'SCIENTIST', 'OTHER')")
+    public ResponseEntity<List<Equipment>> getAllEquipment(@RequestParam(required = false) String sortBy) {
+        List<Equipment> equipmentList = equipmentService.getAllEquipment(sortBy);
+        return ResponseEntity.ok(equipmentList);
     }
-    @PreAuthorize("hasAnyRole('MANAGER','ADMINISTRATIVE')")
-    @PutMapping(value = "/{equipmentId}",consumes = MediaType.APPLICATION_JSON_VALUE)
 
-    public ResponseEntity<Object> updateEquipment(@PathVariable("equipmentId")String equipmentId, @RequestBody EquipmentDTO equipmentDTO){
-            try {
-                    equipmentService.updateEquipment(equipmentId,equipmentDTO);
-                    return new ResponseEntity<>(HttpStatus.CREATED);
-            }catch (DataPersistException e){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }catch (Exception e){
-                e.printStackTrace();
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMINISTRATIVE', 'SCIENTIST', 'OTHER')")
+    public ResponseEntity<Equipment> getEquipmentById(@PathVariable Long id) {
+        Equipment equipment = equipmentService.getEquipmentById(id)
+                .orElseThrow(() -> new RuntimeException("Equipment not found"));
+        return ResponseEntity.ok(equipment);
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
+    public ResponseEntity<Equipment> createEquipment(@Valid @RequestBody Equipment equipment) {
+        Equipment createdEquipment = equipmentService.createEquipment(equipment);
+        return ResponseEntity.ok(createdEquipment);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
+    public ResponseEntity<Equipment> updateEquipment(@PathVariable Long id, @Valid @RequestBody Equipment equipmentDetails) {
+        Equipment updatedEquipment = equipmentService.updateEquipment(id, equipmentDetails);
+        return ResponseEntity.ok(updatedEquipment);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
+    public ResponseEntity<?> deleteEquipment(@PathVariable Long id) {
+        equipmentService.deleteEquipment(id);
+        return ResponseEntity.ok(new MessageResponse("Equipment deleted successfully!"));
     }
 }
