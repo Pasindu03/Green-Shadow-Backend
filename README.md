@@ -54,12 +54,12 @@ The system follows a three-layer architecture:
 - `DELETE /green-shadow/api/v1/fields/{id}`: Delete a field.
 
 ### Crop Management
-- `GET /api/crops`: Fetch all crops.
-- `POST /api/crops`: Add a new crop.
-- `GET /api/crops/{id}`: Fetch a specific crop.
-- `PUT /api/crops/{id}`: Update crop details.
-- `DELETE /api/crops/{id}`: Delete a crop.
+- `GET /green-shadow/api/v1/crops`: Fetch all crops.
+- `POST /green-shadow/api/v1/crops`: Add a new crop.
+- `GET /green-shadow/api/v1/crops/{id}`: Fetch a specific crop.
+- `PUT /green-shadow/api/v1/crops/{id}`: Update crop details.
+- `DELETE /green-shadow/api/v1/crops/{id}`: Delete a crop.
 
 ### Authentication
-- `POST /api/auth/login`: Log in to the system.
-- `POST /api/auth/register`: Register a new user.
+- `POST /green-shadow/api/v1/auth/signIn`: Log in to the system.
+- `POST /green-shadow/api/v1/auth/signUp`: Register a new user.
