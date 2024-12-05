@@ -1,4 +1,4 @@
-package com.example.demo.util;
+package com.example.demo.util.IdGenerator;
 
 import java.util.HashSet;
 import java.util.Set;
