@@ -13,7 +13,7 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/crops")
+@RequestMapping("/api/v1/crops")
 public class CropController {
 
     @Autowired

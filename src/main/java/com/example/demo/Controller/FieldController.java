@@ -13,7 +13,7 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/fields")
+@RequestMapping("/api/v1/fields")
 public class FieldController {
 
     @Autowired
