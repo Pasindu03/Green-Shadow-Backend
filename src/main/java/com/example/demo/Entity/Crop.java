@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Crop {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,7 +22,9 @@ public class Crop {
 
     private String scientificName;
 
-    private String cropImage;
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String cropImage; // Base64 or raw image data as String
 
     private String category;
 
@@ -30,6 +33,4 @@ public class Crop {
     @ManyToOne
     @JoinColumn(name = "field_id", nullable = false)
     private Field field;
-
-    // Additional attributes like crop health, etc., can be added here
 }

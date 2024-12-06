@@ -3,11 +3,11 @@ package com.example.demo.Controller;
 import com.example.demo.DTO.MessageResponse;
 import com.example.demo.Entity.Crop;
 import com.example.demo.Service.CropService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -34,16 +34,67 @@ public class CropController {
         return ResponseEntity.ok(crop);
     }
 
-    @PostMapping
+    @PostMapping(consumes = "multipart/form-data")
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
-    public ResponseEntity<Crop> createCrop(@Valid @RequestBody Crop crop) {
+    public ResponseEntity<Crop> createCrop(
+            @RequestParam("cropName") String cropName,
+            @RequestParam(value = "scientificName", required = false) String scientificName,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "season", required = false) String season,
+            @RequestParam(value = "fieldId") Long fieldId,
+            @RequestParam(value = "cropImage", required = false) MultipartFile cropImage) {
+
+        String cropImageData = null;
+
+        try {
+            if (cropImage != null) {
+                cropImageData = new String(cropImage.getBytes());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to process crop image", e);
+        }
+
+        Crop crop = new Crop();
+        crop.setCropName(cropName);
+        crop.setScientificName(scientificName);
+        crop.setCategory(category);
+        crop.setSeason(season);
+        crop.setCropImage(cropImageData);
+        crop.setField(cropService.getFieldById(fieldId));
+
         Crop createdCrop = cropService.createCrop(crop);
         return ResponseEntity.ok(createdCrop);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = "multipart/form-data")
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
-    public ResponseEntity<Crop> updateCrop(@PathVariable Long id, @Valid @RequestBody Crop cropDetails) {
+    public ResponseEntity<Crop> updateCrop(
+            @PathVariable Long id,
+            @RequestParam("cropName") String cropName,
+            @RequestParam(value = "scientificName", required = false) String scientificName,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "season", required = false) String season,
+            @RequestParam(value = "fieldId") Long fieldId,
+            @RequestParam(value = "cropImage", required = false) MultipartFile cropImage) {
+
+        String cropImageData = null;
+
+        try {
+            if (cropImage != null) {
+                cropImageData = new String(cropImage.getBytes());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to process crop image", e);
+        }
+
+        Crop cropDetails = new Crop();
+        cropDetails.setCropName(cropName);
+        cropDetails.setScientificName(scientificName);
+        cropDetails.setCategory(category);
+        cropDetails.setSeason(season);
+        cropDetails.setCropImage(cropImageData);
+        cropDetails.setField(cropService.getFieldById(fieldId));
+
         Crop updatedCrop = cropService.updateCrop(id, cropDetails);
         return ResponseEntity.ok(updatedCrop);
     }

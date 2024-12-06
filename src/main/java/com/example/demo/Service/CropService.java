@@ -1,7 +1,9 @@
 package com.example.demo.Service;
 
 import com.example.demo.DAO.CropRepository;
+import com.example.demo.DAO.FieldRepository;
 import com.example.demo.Entity.Crop;
+import com.example.demo.Entity.Field;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,9 @@ public class CropService {
 
     @Autowired
     private CropRepository cropRepository;
+
+    @Autowired
+    private FieldRepository fieldRepository; // Add FieldRepository to handle Field entities
 
     public List<Crop> getAllCrops(String sortBy) {
         if (sortBy != null) {
@@ -48,5 +53,11 @@ public class CropService {
         Crop crop = cropRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Crop not found"));
         cropRepository.delete(crop);
+    }
+
+    // New method to fetch a Field by its ID
+    public Field getFieldById(Long fieldId) {
+        return fieldRepository.findById(fieldId)
+                .orElseThrow(() -> new RuntimeException("Field not found"));
     }
 }
