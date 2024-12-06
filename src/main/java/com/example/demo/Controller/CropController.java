@@ -44,11 +44,11 @@ public class CropController {
             @RequestParam(value = "fieldId") Long fieldId,
             @RequestParam(value = "cropImage", required = false) MultipartFile cropImage) {
 
-        String cropImageData = null;
+        byte[] cropImageData = null;
 
         try {
             if (cropImage != null) {
-                cropImageData = new String(cropImage.getBytes());
+                cropImageData = cropImage.getBytes();
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to process crop image", e);
@@ -77,11 +77,11 @@ public class CropController {
             @RequestParam(value = "fieldId") Long fieldId,
             @RequestParam(value = "cropImage", required = false) MultipartFile cropImage) {
 
-        String cropImageData = null;
+        byte[] cropImageData = null;
 
         try {
             if (cropImage != null) {
-                cropImageData = new String(cropImage.getBytes());
+                cropImageData = cropImage.getBytes();
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to process crop image", e);
